@@ -1,4 +1,4 @@
-package pl.kurs.Ex01.models;
+package pl.kurs.Task01.models;
 
 public enum Sex {
     DAUGHTER,
