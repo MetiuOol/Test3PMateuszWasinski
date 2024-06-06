@@ -6,7 +6,7 @@ import pl.kurs.Task01.services.BabyService;
 
 import java.io.File;
 
-public class Ex01Runner {
+public class Task01Runner {
     public static void main(String[] args) {
         File fileMothers = new File("C:\\Users\\MATEUSZ\\IdeaProjects\\Test3P\\mamy.txt");
         File fileBabies = new File("C:\\Users\\MATEUSZ\\IdeaProjects\\Test3P\\babies.txt");
