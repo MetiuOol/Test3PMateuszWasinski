@@ -1,12 +1,14 @@
 package pl.kurs.Task01.services;
 
 import pl.kurs.Task01.models.Baby;
+import pl.kurs.Task01.models.Day;
 import pl.kurs.Task01.models.Mother;
 import pl.kurs.Task01.models.Sex;
 
 import java.io.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -178,46 +180,30 @@ public class BabyService {
         return girlsArray;
     }
 
-    public static void printInfoAboutNameAndGrowthOfHighestGirlAndBoy(Baby[] babies) {
-        Baby highestBoy = getBoysArray(babies)[0];
+    public static Baby getHighestGirl(Baby[] babies) {
         Baby highestGirl = getGirlsArray(babies)[0];
-
-        for (Baby baby : getBoysArray(babies)) {
-            if (highestBoy.getGrowthInCentimeters() < baby.getGrowthInCentimeters()) {
-                highestBoy = baby;
-            }
-        }
 
         for (Baby baby : getGirlsArray(babies)) {
             if (highestGirl.getGrowthInCentimeters() < baby.getGrowthInCentimeters()) {
                 highestGirl = baby;
             }
         }
-        System.out.println("Zad a):");
-        System.out.println("  Najwyższy chłopieć to " + highestBoy.getName() + ", o wzroscie " + highestBoy.getGrowthInCentimeters() + " cm.");
-        System.out.println("  Najwyższa dziewczynka to " + highestGirl.getName() + ", o wzroscie " + highestGirl.getGrowthInCentimeters() + " cm.");
+        return highestGirl;
 
     }
 
-    public static void printInfoAboutDayOfWeekWithMostBornBabies(Baby[] babies) {
+    public static Baby getHighestBoy(Baby[] babies) {
+        Baby highestBoy = getBoysArray(babies)[0];
 
-        class Day {
-            private final DayOfWeek dayName;
-            private int counter;
-
-            public Day(DayOfWeek dayName, int counter) {
-                this.dayName = dayName;
-                this.counter = counter;
-            }
-
-            @Override
-            public String toString() {
-                return "Day{" +
-                        "dayName=" + dayName +
-                        ", counter=" + counter +
-                        '}';
+        for (Baby baby : getBoysArray(babies)) {
+            if (highestBoy.getGrowthInCentimeters() < baby.getGrowthInCentimeters()) {
+                highestBoy = baby;
             }
         }
+        return highestBoy;
+    }
+
+    public static Day getDayWithMostBornBabies(Baby[] babies) {
 
         Day[] dayOfWeeks = {
                 new Day(DayOfWeek.MONDAY, 0),
@@ -232,13 +218,13 @@ public class BabyService {
 
         for (Baby baby : babies) {
             switch (baby.getDateOfBirth().getDayOfWeek()) {
-                case MONDAY -> dayOfWeeks[0].counter++;
-                case TUESDAY -> dayOfWeeks[1].counter++;
-                case WEDNESDAY -> dayOfWeeks[2].counter++;
-                case THURSDAY -> dayOfWeeks[3].counter++;
-                case FRIDAY -> dayOfWeeks[4].counter++;
-                case SATURDAY -> dayOfWeeks[5].counter++;
-                case SUNDAY -> dayOfWeeks[6].counter++;
+                case MONDAY -> dayOfWeeks[0].setCounter();
+                case TUESDAY -> dayOfWeeks[1].setCounter();
+                case WEDNESDAY -> dayOfWeeks[2].setCounter();
+                case THURSDAY -> dayOfWeeks[3].setCounter();
+                case FRIDAY -> dayOfWeeks[4].setCounter();
+                case SATURDAY -> dayOfWeeks[5].setCounter();
+                case SUNDAY -> dayOfWeeks[6].setCounter();
             }
 
         }
@@ -246,60 +232,43 @@ public class BabyService {
         Day dayWithHighestBorn = dayOfWeeks[0];
 
         for (Day dayOfWeek : dayOfWeeks) {
-            if (dayOfWeek.counter > dayWithHighestBorn.counter) {
+            if (dayOfWeek.getCounter() > dayWithHighestBorn.getCounter()) {
                 dayWithHighestBorn = dayOfWeek;
             }
         }
-        System.out.println("Zad b)  Dzień z największą ilością urodzeń to:");
-        System.out.println("   " + dayWithHighestBorn.dayName + ", urodziło się " + dayWithHighestBorn.counter + " dzieci.");
-
-
+        return dayWithHighestBorn;
     }
 
-    public static void printNameWomanWhoHaveUnder25AndBornBabyHeavier4000(Baby[] babies) {
-        Mother[] mothers = new Mother[babies.length];
-        int index = 0;
+    public static List<Mother> getWomanWhoHaveUnder25AndBornBabyHeavier4000(Baby[] babies) {
+        List<Mother> mothers = new ArrayList<>();
 
         for (Baby baby : babies) {
             if (baby.getWeightInGrams() > 4000 && baby.getMother().getAge() < 25) {
-                mothers[index++] = baby.getMother();
+                mothers.add(baby.getMother());
             }
 
         }
-        System.out.println("Zad c): Imiona kobiet poniżej 25 lat, które urodziły dzieci powyżej 4000 gram:");
-        for (Mother mother : mothers) {
-            if (mother != null) {
-                System.out.println("   " + mother.getName());
-            }
+        return mothers;
 
-        }
     }
 
 
-
-    public static void printNameAndDateOfBirthGirlsWhoHasTheSameNameAsMother(Baby[] babies) {
+    public static List<Baby> getGirlsWhoHasTheSameNameAsMother(Baby[] babies) {
         Baby[] girlsArray = getGirlsArray(babies);
-        Baby[] girlsArrayWithTheSameNameAsMother = new Baby[girlsArray.length];
-        int index = 0;
+        List<Baby> girlsWithTheSameNameAsMother = new ArrayList<>();
 
         for (Baby baby : girlsArray) {
             if (baby.getName().equals(baby.getMother().getName())) {
-                girlsArrayWithTheSameNameAsMother[index++] = baby;
+                girlsWithTheSameNameAsMother.add(baby);
             }
         }
-
-        System.out.println("Zad d): Imiona i daty urodzenia dziewczynek, które odziedziczyły imię po matce:");
-        for (Baby baby : girlsArrayWithTheSameNameAsMother) {
-            if (baby != null) {
-                System.out.println("   " + baby.getName() + ", urodzona: " + baby.getDateOfBirth());
-            }
-
-        }
+        return  girlsWithTheSameNameAsMother;
     }
-    public static boolean isTwin(List<Baby> babies){
+
+    public static boolean isTwin(List<Baby> babies) {
         boolean isTwin = false;
         for (int i = 1; i < babies.size(); i++) {
-            if (babies.get(i - 1).getDateOfBirth().isEqual(babies.get(i).getDateOfBirth())){
+            if (babies.get(i - 1).getDateOfBirth().isEqual(babies.get(i).getDateOfBirth())) {
                 isTwin = true;
             }
 
@@ -309,21 +278,15 @@ public class BabyService {
         return isTwin;
     }
 
-    public static Mother[] getMothersWhoBirthTwins(Mother[] mothers) {
-        Mother[] mothersOfTwins = new Mother[mothers.length];
-        int index = 0;
-
+    public static List<Mother> getMothersWhoBirthTwins(Mother[] mothers) {
+        List<Mother> mothersOfTwins = new ArrayList<>();
 
         for (Mother mother : mothers) {
-            if (mother.getBabies().size() >= 2 && isTwin(mother.getBabies()))  {
-                mothersOfTwins[index++] = mother;
+            if (mother.getBabies().size() >= 2 && isTwin(mother.getBabies())) {
+                mothersOfTwins.add(mother);
             }
-
         }
-
-
         return mothersOfTwins;
     }
-
 
 }

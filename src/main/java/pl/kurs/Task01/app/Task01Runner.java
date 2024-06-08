@@ -23,15 +23,29 @@ public class Task01Runner {
 //            System.out.println(mother);
 //
 //        }
-        BabyService.printInfoAboutNameAndGrowthOfHighestGirlAndBoy(babiesArray);
-        BabyService.printInfoAboutDayOfWeekWithMostBornBabies(babiesArray);
-        BabyService.printNameWomanWhoHaveUnder25AndBornBabyHeavier4000(babiesArray);
-        BabyService.printNameAndDateOfBirthGirlsWhoHasTheSameNameAsMother(babiesArray);
-        System.out.println("Zad e): Matki które urodziły bliźnięta:");
+        System.out.println("Zad a)");
+        System.out.println("  Najwyższy chłopieć to " + BabyService.getHighestBoy(babiesArray).getName() + ", o wzroscie " + BabyService.getHighestBoy(babiesArray).getGrowthInCentimeters() + " cm.");
+        System.out.println("  Najwyższa dziewczynka to " + BabyService.getHighestGirl(babiesArray).getName() + ", o wzroscie " + BabyService.getHighestGirl(babiesArray).getGrowthInCentimeters() + " cm.");
+
+        System.out.println("Zad b)  Dzień z największą ilością urodzeń to:");
+        System.out.println("   " + BabyService.getDayWithMostBornBabies(babiesArray).getDayName() + ", urodziło się " + BabyService.getDayWithMostBornBabies(babiesArray).getCounter() + " dzieci.");
+
+
+        System.out.println("Zad c) Imiona kobiet poniżej 25lat, które urodziły dzieci powyżej 4000 gram:");
+        for (Mother mother : BabyService.getWomanWhoHaveUnder25AndBornBabyHeavier4000(babiesArray)) {
+            System.out.println(" " + mother.getName());
+        }
+        System.out.println("Zad d) Imiona i daty urodzenia dziewczynek, które odziedziczyły imię po matce:");
+        for (Baby girl : BabyService.getGirlsWhoHasTheSameNameAsMother(babiesArray)) {
+            System.out.println(" " + girl.getName() + ", urodzona: " + girl.getDateOfBirth());
+        }
+
+        System.out.println("Zad e) Matki które urodziły bliźnięta:");
+//        System.out.println(BabyService.getMothersWhoBirthTwins(mothersArray));
         for (Mother motherOfTwins : BabyService.getMothersWhoBirthTwins(mothersArray)) {
-            if (motherOfTwins != null) {
-                System.out.println("   " + motherOfTwins);
-            }
+            System.out.println("   " + motherOfTwins);
         }
     }
 }
+
+
