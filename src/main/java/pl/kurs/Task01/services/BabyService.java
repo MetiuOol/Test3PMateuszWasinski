@@ -24,6 +24,23 @@ public class BabyService {
 
     }
 
+    public static int countLineInFiles(File file) {
+        int lineCounter = 0;
+        try (
+                Scanner scanner = new Scanner(file)
+        ) {
+            if (scanner.hasNext())
+
+                while (scanner.hasNext()) {
+                    lineCounter++;
+                    scanner.nextLine();
+                }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return lineCounter;
+    }
+
     public static Baby createBabyFromString(String line, Mother[] mothersArray) {
         String[] propertiesArray = line.split(" ");
 
@@ -66,40 +83,23 @@ public class BabyService {
         return mother;
     }
 
-    public static int countLineInFiles(File file) {
-        int lineCounter = 0;
-        try (
-                Scanner scanner = new Scanner(file)
-        ) {
-            if (scanner.hasNext())
 
-                while (scanner.hasNext()) {
-                    lineCounter++;
-                    scanner.nextLine();
-                }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return lineCounter;
-    }
-
-    public static int countLineInBabyFiles(File file) {
+        public static int countLineInBabyFiles(File file) {
         int lineBabyCounter = 0;
         try (
-                Scanner scannerBaby = new Scanner(file)
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "Windows-1252"))
         ) {
-            if (scannerBaby.hasNext())
 
-                while (scannerBaby.hasNext()) {
-                    lineBabyCounter++;
-                    scannerBaby.nextLine();
-                }
-        } catch (FileNotFoundException e) {
+            while ((br.readLine()) != null) {
+               lineBabyCounter++;
+            }
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
         return lineBabyCounter;
     }
-
 
     public static Mother[] getMothersArray(File file) {
         Mother[] array = new Mother[countLineInFiles(file)];
@@ -126,8 +126,7 @@ public class BabyService {
         int index = 0;
 
         try (
-                FileReader fr = new FileReader(file);
-                BufferedReader br = new BufferedReader(fr)
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "Windows-1252"))
 
         ) {
             String line;
@@ -141,6 +140,9 @@ public class BabyService {
 
         return babies;
     }
+
+
+
 
     public static Baby[] getBoysArray(Baby[] babies) {
         int index = 0;

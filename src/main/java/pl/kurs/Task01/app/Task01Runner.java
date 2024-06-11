@@ -5,11 +5,12 @@ import pl.kurs.Task01.models.Mother;
 import pl.kurs.Task01.services.BabyService;
 
 import java.io.File;
+import java.util.List;
 
 public class Task01Runner {
     public static void main(String[] args) {
         File fileMothers = new File("C:\\Users\\MATEUSZ\\IdeaProjects\\Test3P\\mamy.txt");
-        File fileBabies = new File("C:\\Users\\MATEUSZ\\IdeaProjects\\Test3P\\babies.txt");
+        File fileBabies = new File("C:\\Users\\MATEUSZ\\IdeaProjects\\Test3P\\noworodki.txt");
         Mother[] mothersArray = BabyService.getMothersArray(fileMothers);
 //        for (Mother mother : mothersArray) {
 //            System.out.println(mother);
@@ -21,7 +22,7 @@ public class Task01Runner {
 //        }
 //        for (Mother mother : mothersArray) {
 //            System.out.println(mother);
-//
+
 //        }
         System.out.println("Zad a)");
         System.out.println("  Najwyższy chłopieć to " + BabyService.getHighestBoy(babiesArray).getName() + ", o wzroscie " + BabyService.getHighestBoy(babiesArray).getGrowthInCentimeters() + " cm.");
@@ -47,5 +48,6 @@ public class Task01Runner {
         }
     }
 }
+
 
 
