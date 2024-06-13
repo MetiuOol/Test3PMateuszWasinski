@@ -10,7 +10,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class BabyService {
 
@@ -24,24 +23,24 @@ public class BabyService {
 
     }
 
-    public static int countLineInFiles(File file) {
-        int lineCounter = 0;
-        try (
-                Scanner scanner = new Scanner(file)
-        ) {
-            if (scanner.hasNext())
+//    public static int countLineInFiles(File file) {
+//        int lineCounter = 0;
+//        try (
+//                Scanner scanner = new Scanner(file)
+//        ) {
+//            if (scanner.hasNext())
+//
+//                while (scanner.hasNext()) {
+//                    lineCounter++;
+//                    scanner.nextLine();
+//                }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        return lineCounter;
+//    }
 
-                while (scanner.hasNext()) {
-                    lineCounter++;
-                    scanner.nextLine();
-                }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return lineCounter;
-    }
-
-    public static Baby createBabyFromString(String line, Mother[] mothersArray) {
+    public static Baby createBabyFromString(String line, List<Mother> mothersList) {
         String[] propertiesArray = line.split(" ");
 
         Baby baby = new Baby(
@@ -51,7 +50,7 @@ public class BabyService {
                 LocalDate.parse((propertiesArray[3])),
                 Integer.parseInt(propertiesArray[4]),
                 Integer.parseInt(propertiesArray[5]),
-                setMother(Integer.parseInt(propertiesArray[6]), mothersArray)
+                setMother(Integer.parseInt(propertiesArray[6]), mothersList)
         );
         baby.getMother().addBabies(baby);
         return baby;
@@ -71,7 +70,7 @@ public class BabyService {
         return babySex;
     }
 
-    private static Mother setMother(int motherId, Mother[] mothers) {
+    private static Mother setMother(int motherId, List<Mother> mothers) {
         Mother mother = null;
         for (Mother mother1 : mothers) {
             if (motherId == mother1.getMotherId()) {
@@ -84,14 +83,14 @@ public class BabyService {
     }
 
 
-        public static int countLineInBabyFiles(File file) {
+    public static int countLineInBabyFiles(File file) {
         int lineBabyCounter = 0;
         try (
                 BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "Windows-1252"))
         ) {
 
             while ((br.readLine()) != null) {
-               lineBabyCounter++;
+                lineBabyCounter++;
             }
 
         } catch (IOException e) {
@@ -101,29 +100,45 @@ public class BabyService {
         return lineBabyCounter;
     }
 
-    public static Mother[] getMothersArray(File file) {
-        Mother[] array = new Mother[countLineInFiles(file)];
-        int index = 0;
+//    public static Mother[] getMothersArray(File file) {
+//        Mother[] array = new Mother[countLineInFiles(file)];
+//        int index = 0;
+//
+//        try (
+//                FileReader fr = new FileReader(file);
+//                BufferedReader br = new BufferedReader(fr)
+//        ) {
+//            String line;
+//            while ((line = br.readLine()) != null) {
+//                array[index++] = createMotherFromString(line);
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return array;
+//
+//    }
 
+    public static List<Mother> getMothersList(File file) {
+        List<Mother> motherList = new ArrayList<>();
         try (
                 FileReader fr = new FileReader(file);
                 BufferedReader br = new BufferedReader(fr)
         ) {
             String line;
             while ((line = br.readLine()) != null) {
-                array[index++] = createMotherFromString(line);
+                motherList.add(createMotherFromString(line));
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return array;
+        return motherList;
 
     }
 
-    public static Baby[] getBabiesArray(File file, Mother[] mothersArray) {
-        Baby[] babies = new Baby[countLineInBabyFiles(file)];
-        int index = 0;
+    public static List<Baby> getBabiesList(File file, List<Mother> mothersList) {
+        List<Baby> babies = new ArrayList<>();
 
         try (
                 BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "Windows-1252"))
@@ -131,7 +146,7 @@ public class BabyService {
         ) {
             String line;
             while ((line = br.readLine()) != null) {
-                babies[index++] = createBabyFromString(line, mothersArray);
+                babies.add(createBabyFromString(line, mothersList));
             }
 
         } catch (IOException e) {
@@ -142,62 +157,91 @@ public class BabyService {
     }
 
 
+//    public static Baby[] getBoysArray(Baby[] babies) {
+//        int index = 0;
+//        for (Baby baby : babies) {
+//            if (baby.getSex() == Sex.SON) {
+//                index++;
+//            }
+//        }
+//        Baby[] boysArray = new Baby[index];
+//        int i = 0;
+//        for (Baby baby : babies) {
+//            if (baby.getSex() == Sex.SON) {
+//                boysArray[i++] = baby;
+//
+//            }
+//
+//        }
+//        return boysArray;
+//    }
 
-
-    public static Baby[] getBoysArray(Baby[] babies) {
-        int index = 0;
-        for (Baby baby : babies) {
+    public static List<Baby> getBoysList(List<Baby> babies) {
+        List<Baby> boysList = new ArrayList<>();
+        for (Baby baby : babies)  {
             if (baby.getSex() == Sex.SON) {
-                index++;
+                boysList.add(baby);
             }
         }
-        Baby[] boysArray = new Baby[index];
-        int i = 0;
-        for (Baby baby : babies) {
-            if (baby.getSex() == Sex.SON) {
-                boysArray[i++] = baby;
-
-            }
-
-        }
-        return boysArray;
+        return boysList;
     }
 
-    public static Baby[] getGirlsArray(Baby[] babies) {
-        int index = 0;
+//    public static Baby[] getGirlsArray(Baby[] babies) {
+//        int index = 0;
+//        for (Baby baby : babies) {
+//            if (baby.getSex() == Sex.DAUGHTER) {
+//                index++;
+//            }
+//        }
+//        Baby[] girlsArray = new Baby[index];
+//        int i = 0;
+//        for (Baby baby : babies) {
+//            if (baby.getSex() == Sex.DAUGHTER) {
+//                girlsArray[i++] = baby;
+//
+//            }
+//
+//        }
+//        return girlsArray;
+//    }
+
+    public static List<Baby> getGirlsList(List<Baby> babies) {
+        List<Baby> girlsList = new ArrayList<>();
         for (Baby baby : babies) {
             if (baby.getSex() == Sex.DAUGHTER) {
-                index++;
+                girlsList.add(baby);
             }
         }
-        Baby[] girlsArray = new Baby[index];
-        int i = 0;
-        for (Baby baby : babies) {
-            if (baby.getSex() == Sex.DAUGHTER) {
-                girlsArray[i++] = baby;
-
-            }
-
-        }
-        return girlsArray;
+        return girlsList;
     }
 
-    public static Baby getHighestGirl(Baby[] babies) {
-        Baby highestGirl = getGirlsArray(babies)[0];
+//    public static Baby getHighestGirl(Baby[] babies) {
+//        Baby highestGirl = getGirlsList(babies)[0];
+//
+//        for (Baby baby : getGirlsList(babies)) {
+//            if (highestGirl.getGrowthInCentimeters() < baby.getGrowthInCentimeters()) {
+//                highestGirl = baby;
+//            }
+//        }
+//        return highestGirl;
+//
+//    }
 
-        for (Baby baby : getGirlsArray(babies)) {
+    public static Baby getHighestGirl(List<Baby> babies) {
+        Baby highestGirl = getGirlsList(babies).get(0);
+
+        for (Baby baby : getGirlsList(babies)) {
             if (highestGirl.getGrowthInCentimeters() < baby.getGrowthInCentimeters()) {
                 highestGirl = baby;
             }
         }
         return highestGirl;
-
     }
 
-    public static Baby getHighestBoy(Baby[] babies) {
-        Baby highestBoy = getBoysArray(babies)[0];
+    public static Baby getHighestBoy(List<Baby> babies) {
+        Baby highestBoy = getBoysList(babies).get(0);
 
-        for (Baby baby : getBoysArray(babies)) {
+        for (Baby baby : getBoysList(babies)) {
             if (highestBoy.getGrowthInCentimeters() < baby.getGrowthInCentimeters()) {
                 highestBoy = baby;
             }
@@ -205,7 +249,7 @@ public class BabyService {
         return highestBoy;
     }
 
-    public static Day getDayWithMostBornBabies(Baby[] babies) {
+    public static Day getDayWithMostBornBabies(List<Baby> babies) {
 
         Day[] dayOfWeeks = {
                 new Day(DayOfWeek.MONDAY, 0),
@@ -241,7 +285,7 @@ public class BabyService {
         return dayWithHighestBorn;
     }
 
-    public static List<Mother> getWomanWhoHaveUnder25AndBornBabyHeavier4000(Baby[] babies) {
+    public static List<Mother> getWomanWhoHaveUnder25AndBornBabyHeavier4000(List<Baby> babies) {
         List<Mother> mothers = new ArrayList<>();
 
         for (Baby baby : babies) {
@@ -255,16 +299,16 @@ public class BabyService {
     }
 
 
-    public static List<Baby> getGirlsWhoHasTheSameNameAsMother(Baby[] babies) {
-        Baby[] girlsArray = getGirlsArray(babies);
+    public static List<Baby> getGirlsWhoHasTheSameNameAsMother(List<Baby> babies) {
+        List<Baby> girlsList = getGirlsList(babies);
         List<Baby> girlsWithTheSameNameAsMother = new ArrayList<>();
 
-        for (Baby baby : girlsArray) {
+        for (Baby baby : girlsList) {
             if (baby.getName().equals(baby.getMother().getName())) {
                 girlsWithTheSameNameAsMother.add(baby);
             }
         }
-        return  girlsWithTheSameNameAsMother;
+        return girlsWithTheSameNameAsMother;
     }
 
     public static boolean isTwin(List<Baby> babies) {
@@ -273,14 +317,11 @@ public class BabyService {
             if (babies.get(i - 1).getDateOfBirth().isEqual(babies.get(i).getDateOfBirth())) {
                 isTwin = true;
             }
-
         }
-
-
         return isTwin;
     }
 
-    public static List<Mother> getMothersWhoBirthTwins(Mother[] mothers) {
+    public static List<Mother> getMothersWhoBirthTwins(List<Mother> mothers) {
         List<Mother> mothersOfTwins = new ArrayList<>();
 
         for (Mother mother : mothers) {
